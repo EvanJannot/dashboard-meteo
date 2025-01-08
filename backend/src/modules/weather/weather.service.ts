@@ -85,7 +85,7 @@ export class WeatherService {
       });
 
       const currentWeather = {
-        temp: response.data.main.temp,
+        temp: response.data.main.temp - 273.15,
         weather: response.data.weather[0].description,
         pressure: response.data.main.pressure,
         wind: response.data.wind.speed,
