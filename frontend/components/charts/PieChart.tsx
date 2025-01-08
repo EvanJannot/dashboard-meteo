@@ -14,7 +14,6 @@ const PieChartComponent: React.FC<PieChartComponentProps> = ({ humidity }) => {
     { name: 'Sec', value: remaining },
   ];
 
-  console.log(data);
   const COLORS = ['#8884d8', '#82ca9d'];
   return (
     <ResponsiveContainer  height="85%">
