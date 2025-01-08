@@ -1,17 +1,18 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { fetchWeatherData } from '@/services/weather';
+import { fetchWeatherData, fetchHumidityData } from '@/services/weather';
 import { TransformedWeatherData, ForecastEntry } from '@/types/weather.types';
 
 import dynamic from 'next/dynamic';
 
 const LineChartComponent = dynamic(() => import('@/components/charts/LineChart'), { ssr: false });
 // const BarChartComponent = dynamic(() => import('@/components/charts/BarChart'), { ssr: false });
-// const PieChartComponent = dynamic(() => import('@/components/charts/PieChart'), { ssr: false });
+const PieChartComponent = dynamic(() => import('@/components/charts/PieChart'), { ssr: false });
 
 const DashboardPage = () => {
   const [weatherData, setWeatherData] = useState<TransformedWeatherData[]>([]);
+  const [humidityData, setHumidityData] = useState<number | null>(null);
   const [city] = useState('Montreal');
   const [loading, setLoading] = useState(false);
   const [, setError] = useState<string | null>(null);
@@ -22,7 +23,7 @@ const DashboardPage = () => {
       setError(null);
       try {
         const data = await fetchWeatherData(city);
-        console.log("Données récupérées : ", data); 
+        const humidityData = await fetchHumidityData(city);
 
         if (data && data.forecast && data.forecast.length > 0) {  
           const transformedData = data.forecast.map((entry: ForecastEntry) => ({
@@ -30,11 +31,17 @@ const DashboardPage = () => {
             temperature: parseFloat(entry.temp.toFixed(1)),  
           }));
   
-          console.log("Données transformées : ", transformedData);  // Vérifie que les données sont bien transformées
           setWeatherData(transformedData);
         } else {
           console.error("Aucune donnée disponible");
         }
+
+        if (humidityData && humidityData.humidity) {
+          setHumidityData(humidityData.humidity);
+        } else {
+          console.error("Aucune donnée d'humidité disponible");
+        }
+
       } catch (err: unknown) {
         if (err instanceof Error) {
           setError(err.message);
@@ -58,11 +65,11 @@ const DashboardPage = () => {
       {/* <div className="shadow-lg rounded-lg bg-white p-4">
         <h2 className="text-xl font-bold mb-4">Revenue by Month</h2>
         {loading ? <p>Chargement des données...</p> : <BarChartComponent data={weatherData} />}
-      </div>
-      <div className="shadow-lg rounded-lg bg-white p-4">
-        <h2 className="text-xl font-bold mb-4">Customer Segments</h2>
-        {loading ? <p>Chargement des données...</p> : <PieChartComponent data={weatherData} />}
       </div> */}
+      <div className="shadow-lg rounded-lg bg-white p-4">
+        <h2 className="text-xl font-bold mb-4">Pourcentage d&apos;humidité</h2>
+        {loading ? <p>Chargement des données...</p> : <PieChartComponent humidity={humidityData ?? 0} />}
+      </div> 
     </div>
   );
 };

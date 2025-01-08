@@ -1,23 +1,34 @@
 'use client';
 
-import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
-import { TransformedWeatherData } from '@/types/weather.types';
+import { PieChart, ResponsiveContainer, Pie, Cell, Tooltip, Legend } from 'recharts';
 
 interface PieChartComponentProps {
-  data: TransformedWeatherData[];
+  humidity: number;
 }
 
-const PieChartComponent: React.FC<PieChartComponentProps> = ({ data }) => {
+const PieChartComponent: React.FC<PieChartComponentProps> = ({ humidity }) => {
+  const remaining = 100 - humidity;
+
+  const data = [
+    { name: 'Humidité', value: humidity },
+    { name: 'Sec', value: remaining },
+  ];
+
+  console.log(data);
+  const COLORS = ['#8884d8', '#82ca9d'];
   return (
-    <PieChart width={500} height={300}>
-      <Pie data={data} dataKey="temperature" nameKey="date" outerRadius={150} fill="#8884d8" label>
+    <ResponsiveContainer  height="85%">
+      <PieChart width={500} height={300}>
+        <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} fill="#8884d8" label={(entry) => `${entry.name}: ${entry.value}%`}>
         {data.map((entry, index) => (
-          <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#8884d8' : '#82ca9d'} />
-        ))}
-      </Pie>
-      <Tooltip />
-      <Legend />
-    </PieChart>
+            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+          ))}
+        </Pie>
+        <Tooltip />
+        <Legend />
+        <Tooltip formatter={(value: number) => `${value}%`} />
+      </PieChart>
+    </ResponsiveContainer>
   );
 };
 
