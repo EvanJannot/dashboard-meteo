@@ -1,11 +1,14 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useFetchWeatherData } from '@/hooks/useFetchWeatherData';
 import { useFetchHumidityData } from '@/hooks/useFetchHumidityData';
 import { useFetchCurrentData } from '@/hooks/useFetchCurrentData';
 
 import dynamic from 'next/dynamic';
+
+import Navbar from '@/components/ui/Navbar';
+import WeatherData from '@/components/ui/WeatherData';
 
 const LineChartComponent = dynamic(() => import('@/components/charts/LineChart'), { ssr: false });
 // const BarChartComponent = dynamic(() => import('@/components/charts/BarChart'), { ssr: false });
@@ -13,18 +16,10 @@ const PieChartComponent = dynamic(() => import('@/components/charts/PieChart'), 
 
 const DashboardPage = () => {
   const [city, setCity] = useState('Montreal');
-  const [searchCity, setSearchCity] = useState('');
 
-  const handleSearch = () => {
-    if (searchCity.trim() !== '') {
-      setCity(searchCity); 
-      setSearchCity(''); 
-    }
+  const handleCitySearch = (newCity: string) => {
+    setCity(newCity);
   };
-  
-  useEffect(() => {
-    setSearchCity('');
-  }, [city]); 
 
   const { weatherData, loading: forecastLoading, error: forecastError } = useFetchWeatherData(city);
   const { humidity, loading: humidityLoading, error: humidityError } = useFetchHumidityData(city);
@@ -40,56 +35,10 @@ const DashboardPage = () => {
 
   return (
     <div>
-      <div className="flex justify-start mb-8">
-        <input
-          type="text"
-          value={searchCity}
-          onChange={(e) => setSearchCity(e.target.value)}
-          placeholder="Entrez le nom de la ville"
-          className="px-4 py-2 rounded-lg border border-gray-300 shadow-md w-1/2 sm:w-1/3"
-        />
-        <button
-          onClick={handleSearch}
-          className="ml-4 px-6 py-2 rounded-lg bg-blue-500 text-white font-semibold shadow-md hover:bg-blue-600"
-        >
-          Rechercher
-        </button>
-      </div>
-      <div className="bg-blue-50 p-6 rounded-lg shadow-lg border border-blue-200">
-        <h1 className="text-3xl font-extrabold mb-6">
-          Météo à <span className="capitalize">{city}</span>
-        </h1>
-        {currentWeather ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-blue-900">
-            <div className="flex items-center">
-              <span className="material-icons mr-3">thermostat</span>
-              <p className="text-lg font-semibold">
-                Température : <span className="text-black">{currentWeather.temp}°C</span>
-              </p>
-            </div>
-            <div className="flex items-center">
-              <span className="material-icons mr-3">wb_cloudy</span>
-              <p className="text-lg font-semibold">
-                Temps : <span className="text-black capitalize">{currentWeather.weather}</span>
-              </p>
-            </div>
-            <div className="flex items-center">
-              <span className="material-icons mr-3">speed</span>
-              <p className="text-lg font-semibold">
-                Pression : <span className="text-black">{currentWeather.pressure} hPa</span>
-              </p>
-            </div>
-            <div className="flex items-center">
-              <span className="material-icons mr-3">air</span>
-              <p className="text-lg font-semibold">
-                Vent : <span className="text-black">{currentWeather.wind} m/s</span>
-              </p>
-            </div>
-          </div>
-        ) : (
-          <p className="text-lg text-red-600 font-medium">Aucune donnée disponible</p>
-        )}
-      </div>
+       <Navbar onSearch={handleCitySearch} />
+
+       <WeatherData city={city} currentWeather={currentWeather} />
+
       <div className="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <div className="shadow-lg rounded-lg bg-white p-4 w-full">
           <h2 className="text-xl font-bold mb-4">Températures au fil du temps</h2>
