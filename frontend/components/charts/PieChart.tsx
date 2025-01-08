@@ -10,8 +10,8 @@ const PieChartComponent: React.FC<PieChartComponentProps> = ({ humidity }) => {
   const remaining = 100 - humidity;
 
   const data = [
-    { name: 'Humidité', value: humidity },
-    { name: 'Sec', value: remaining },
+    { name: 'Humidity', value: humidity },
+    { name: 'Dry', value: remaining },
   ];
 
   const COLORS = ['#8884d8', '#82ca9d'];

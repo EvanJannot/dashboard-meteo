@@ -8,7 +8,7 @@ export class WeatherController {
   @Get('forecast')
   async getWeather(@Query('city') city: string) {
     if (!city) {
-      throw new Error('Le nom de la ville est requis');
+      throw new Error('City name required');
     }
     try {
       const forecastData = await this.weatherService.getWeatherByCity(city);
@@ -17,14 +17,14 @@ export class WeatherController {
         forecast: forecastData,
       };
     } catch (error) {
-      throw new Error('Erreur lors de la récupération des données météo');
+      throw new Error('Error retrieving weather data');
     }
   }
 
   @Get('humidity')
   async getWeatherHumidity(@Query('city') city: string) {
     if (!city) {
-      throw new Error('Le nom de la ville est requis');
+      throw new Error('City name required');
     }
     try {
       const humidity = await this.weatherService.getWeatherHumidityByCity(city);
@@ -33,14 +33,14 @@ export class WeatherController {
         humidity,
       };
     } catch (error) {
-      throw new Error('Erreur lors de la récupération des données météo');
+      throw new Error('Error retrieving weather data');
     }
   }
 
   @Get('current')
   async getCurrentWeather(@Query('city') city: string) {
     if (!city) {
-      throw new Error('Le nom de la ville est requis');
+      throw new Error('City name required');
     }
     try {
       const currentWeather = await this.weatherService.getCurrentWeatherByCity(city);
@@ -49,7 +49,7 @@ export class WeatherController {
         currentWeather,
       };
     } catch (error) {
-      throw new Error('Erreur lors de la récupération des données météo');
+      throw new Error('Error retrieving weather data');
     }
   }
 }

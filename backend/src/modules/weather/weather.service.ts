@@ -26,13 +26,13 @@ export class WeatherService {
       });
 
       if (response.data.length === 0) {
-        throw new Error('Ville non trouvée');
+        throw new Error('City not found');
       }
 
-      const { lat, lon } = response.data[0];  // Prend les premières coordonnées si plusieurs résultats
+      const { lat, lon } = response.data[0]; 
       return { lat, lon };
     } catch (error) {
-      throw new HttpException('Erreur lors de la récupération des coordonnées', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException('Error retrieving weather data', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -49,7 +49,7 @@ export class WeatherService {
       const humidity = response.data.main.humidity;
       return humidity;
     } catch (error) {
-      throw new HttpException('Erreur lors de la récupération de l\'humidité', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException('Error retrieving humidity data', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -70,7 +70,7 @@ export class WeatherService {
 
       return forecastData;
     } catch (error) {
-      throw new HttpException('Erreur lors de la récupération des prévisions météorologiques', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException('Error retrieving weather forecasts', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -93,7 +93,7 @@ export class WeatherService {
 
       return currentWeather;
     } catch (error) {
-      throw new HttpException('Erreur lors de la récupération des données météo', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException('Error retrieving weather data', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 

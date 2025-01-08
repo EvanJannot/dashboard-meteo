@@ -26,11 +26,11 @@ const DashboardPage = () => {
   const { currentWeather, loading: currentWeatherLoading, error: currentWeatherError } = useFetchCurrentData(city);
   
   if (forecastLoading || humidityLoading || currentWeatherLoading) {
-    return <p>Chargement des données...</p>;
+    return <p>Loading data...</p>;
   }
 
   if (forecastError || humidityError || currentWeatherError) {
-    return <p>Erreur : {forecastError || humidityError || currentWeatherError}</p>;
+    return <p>Error : {forecastError || humidityError || currentWeatherError}</p>;
   }
 
   return (
@@ -41,7 +41,7 @@ const DashboardPage = () => {
 
       <div className="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <div className="shadow-lg rounded-lg bg-white p-4 w-full">
-          <h2 className="text-xl font-bold mb-4">Températures au fil du temps</h2>
+          <h2 className="text-xl font-bold mb-4">Temperatures over time</h2>
           <LineChartComponent data={weatherData} />
         </div>
         {/* <div className="shadow-lg rounded-lg bg-white p-4">
@@ -49,7 +49,7 @@ const DashboardPage = () => {
           {loading ? <p>Chargement des données...</p> : <BarChartComponent data={weatherData} />}
         </div> */}
         <div className="shadow-lg rounded-lg bg-white p-4">
-          <h2 className="text-xl font-bold mb-4">Pourcentage d&apos;humidité</h2>
+          <h2 className="text-xl font-bold mb-4">Humidity percentage</h2>
           <PieChartComponent humidity={humidity ?? 0} />
         </div> 
       </div>
