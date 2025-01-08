@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFetchWeatherData } from '@/hooks/useFetchWeatherData';
 import { useFetchHumidityData } from '@/hooks/useFetchHumidityData';
 import { useFetchCurrentData } from '@/hooks/useFetchCurrentData';
@@ -12,13 +12,23 @@ const LineChartComponent = dynamic(() => import('@/components/charts/LineChart')
 const PieChartComponent = dynamic(() => import('@/components/charts/PieChart'), { ssr: false });
 
 const DashboardPage = () => {
-  const [city] = useState('Montreal');
+  const [city, setCity] = useState('Montreal');
+  const [searchCity, setSearchCity] = useState('');
+
+  const handleSearch = () => {
+    if (searchCity.trim() !== '') {
+      setCity(searchCity); 
+      setSearchCity(''); 
+    }
+  };
   
+  useEffect(() => {
+    setSearchCity('');
+  }, [city]); 
+
   const { weatherData, loading: forecastLoading, error: forecastError } = useFetchWeatherData(city);
   const { humidity, loading: humidityLoading, error: humidityError } = useFetchHumidityData(city);
   const { currentWeather, loading: currentWeatherLoading, error: currentWeatherError } = useFetchCurrentData(city);
-
-  console.log(currentWeather);
   
   if (forecastLoading || humidityLoading || currentWeatherLoading) {
     return <p>Chargement des données...</p>;
@@ -30,6 +40,21 @@ const DashboardPage = () => {
 
   return (
     <div>
+      <div className="flex justify-start mb-8">
+        <input
+          type="text"
+          value={searchCity}
+          onChange={(e) => setSearchCity(e.target.value)}
+          placeholder="Entrez le nom de la ville"
+          className="px-4 py-2 rounded-lg border border-gray-300 shadow-md w-1/2 sm:w-1/3"
+        />
+        <button
+          onClick={handleSearch}
+          className="ml-4 px-6 py-2 rounded-lg bg-blue-500 text-white font-semibold shadow-md hover:bg-blue-600"
+        >
+          Rechercher
+        </button>
+      </div>
       <div className="bg-blue-50 p-6 rounded-lg shadow-lg border border-blue-200">
         <h1 className="text-3xl font-extrabold mb-6">
           Météo à <span className="capitalize">{city}</span>
