@@ -36,4 +36,20 @@ export class WeatherController {
       throw new Error('Erreur lors de la récupération des données météo');
     }
   }
+
+  @Get('current')
+  async getCurrentWeather(@Query('city') city: string) {
+    if (!city) {
+      throw new Error('Le nom de la ville est requis');
+    }
+    try {
+      const currentWeather = await this.weatherService.getCurrentWeatherByCity(city);
+      return {
+        city,
+        currentWeather,
+      };
+    } catch (error) {
+      throw new Error('Erreur lors de la récupération des données météo');
+    }
+  }
 }
