@@ -2,13 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { fetchWeatherData } from '@/services/weather';
-import { TransformedWeatherData } from '@/types/weather.types';
+import { TransformedWeatherData, ForecastEntry } from '@/types/weather.types';
 
 import dynamic from 'next/dynamic';
 
 const LineChartComponent = dynamic(() => import('@/components/charts/LineChart'), { ssr: false });
-const BarChartComponent = dynamic(() => import('@/components/charts/BarChart'), { ssr: false });
-const PieChartComponent = dynamic(() => import('@/components/charts/PieChart'), { ssr: false });
+// const BarChartComponent = dynamic(() => import('@/components/charts/BarChart'), { ssr: false });
+// const PieChartComponent = dynamic(() => import('@/components/charts/PieChart'), { ssr: false });
 
 const DashboardPage = () => {
   const [weatherData, setWeatherData] = useState<TransformedWeatherData[]>([]);
@@ -24,24 +24,20 @@ const DashboardPage = () => {
         const data = await fetchWeatherData(city);
         console.log("Données récupérées : ", data); 
 
-        if (data && data.main) {
-          const transformedData = [
-            {
-              date: new Date(data.dt * 1000).toLocaleDateString(),
-              temperature: data.main.temp,
-              feelsLike: data.main.feels_like,
-              humidity: data.main.humidity,
-              pressure: data.main.pressure,
-            },
-          ];
-          console.log("Données transformées : ", transformedData);
+        if (data && data.forecast && data.forecast.length > 0) {  
+          const transformedData = data.forecast.map((entry: ForecastEntry) => ({
+            date: new Date(entry.timestamp * 1000).toLocaleString(), 
+            temperature: entry.temp,  
+          }));
+  
+          console.log("Données transformées : ", transformedData);  // Vérifie que les données sont bien transformées
           setWeatherData(transformedData);
         } else {
-          console.error("Structure des données inattendue : ", data);
+          console.error("Aucune donnée disponible");
         }
       } catch (err: unknown) {
         if (err instanceof Error) {
-          setError(err.message);  // Maintenant, tu peux accéder à err.message en toute sécurité
+          setError(err.message);
         } else {
           setError('Une erreur inconnue est survenue');
         }
@@ -56,17 +52,17 @@ const DashboardPage = () => {
   return (
     <div className="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <div className="shadow-lg rounded-lg bg-white p-4">
-        <h2 className="text-xl font-bold mb-4">Sales Over Time</h2>
+        <h2 className="text-xl font-bold mb-4">Températures au fil du temps</h2>
         {loading ? <p>Chargement des données...</p> : <LineChartComponent data={weatherData} />}
       </div>
-      <div className="shadow-lg rounded-lg bg-white p-4">
+      {/* <div className="shadow-lg rounded-lg bg-white p-4">
         <h2 className="text-xl font-bold mb-4">Revenue by Month</h2>
         {loading ? <p>Chargement des données...</p> : <BarChartComponent data={weatherData} />}
       </div>
       <div className="shadow-lg rounded-lg bg-white p-4">
         <h2 className="text-xl font-bold mb-4">Customer Segments</h2>
         {loading ? <p>Chargement des données...</p> : <PieChartComponent data={weatherData} />}
-      </div>
+      </div> */}
     </div>
   );
 };

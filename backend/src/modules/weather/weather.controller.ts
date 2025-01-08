@@ -7,6 +7,17 @@ export class WeatherController {
 
   @Get()
   async getWeather(@Query('city') city: string) {
-    return this.weatherService.getWeatherByCity(city);
+    if (!city) {
+      throw new Error('Le nom de la ville est requis');
+    }
+    try {
+      const forecastData = await this.weatherService.getWeatherByCity(city);
+      return {
+        city,
+        forecast: forecastData,
+      };
+    } catch (error) {
+      throw new Error('Erreur lors de la récupération des données météo');
+    }
   }
 }
