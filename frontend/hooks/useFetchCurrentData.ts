@@ -3,6 +3,7 @@ import { fetchCurrentData } from '@/services/fetchCurrentData';
 
 interface CurrentWeather {
   temp: number; 
+  tempfeel: number;
   weather: string; 
   pressure: number; 
   wind: number; 
@@ -21,11 +22,13 @@ export const useFetchCurrentData = (city: string) => {
         const data = await fetchCurrentData(city);
         if (data &&
           typeof data.currentWeather.temp === 'number' &&
+          typeof data.currentWeather.tempfeel === 'number' &&
           typeof data.currentWeather.weather === 'string' &&
           typeof data.currentWeather.pressure === 'number' &&
           typeof data.currentWeather.wind === 'number') {
             setCurrentWeather({
               temp: parseFloat(data.currentWeather.temp.toFixed(1)),
+              tempfeel: parseFloat(data.currentWeather.tempfeel.toFixed(1)),
               weather: data.currentWeather.weather,
               pressure: data.currentWeather.pressure,
               wind: data.currentWeather.wind,

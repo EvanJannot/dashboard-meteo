@@ -4,6 +4,7 @@ type WeatherDataProps = {
   city: string;
   currentWeather: {
     temp: number;
+    tempfeel: number;
     weather: string;
     pressure: number;
     wind: number;
@@ -28,6 +29,12 @@ const WeatherData: React.FC<WeatherDataProps> = ({ city, currentWeather }) => {
               <span className="material-icons mr-3">wb_cloudy</span>
               <p className="text-lg font-semibold">
                 Weather : <span className="text-black capitalize">{currentWeather.weather}</span>
+              </p>
+            </div>
+            <div className="flex items-center">
+              <span className="material-icons mr-3">thermostat</span>
+              <p className="text-lg font-semibold">
+                Feels Like : <span className="text-black">{currentWeather.tempfeel}°C</span>
               </p>
             </div>
             <div className="flex items-center">
