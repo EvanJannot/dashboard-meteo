@@ -9,7 +9,7 @@ interface BarChartComponentProps {
 
 const BarChartComponent: React.FC<BarChartComponentProps> = ({ data }) => {
   return (
-    <BarChart width={600} height={300} data={data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+    <BarChart width={500} height={300} data={data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
       <CartesianGrid stroke="#ccc" />
       <XAxis dataKey="date" />
       <YAxis />

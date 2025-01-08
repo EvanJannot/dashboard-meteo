@@ -9,7 +9,7 @@ interface PieChartComponentProps {
 
 const PieChartComponent: React.FC<PieChartComponentProps> = ({ data }) => {
   return (
-    <PieChart width={600} height={300}>
+    <PieChart width={500} height={300}>
       <Pie data={data} dataKey="temperature" nameKey="date" outerRadius={150} fill="#8884d8" label>
         {data.map((entry, index) => (
           <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#8884d8' : '#82ca9d'} />

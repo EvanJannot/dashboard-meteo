@@ -12,7 +12,7 @@ const LineChartComponent = dynamic(() => import('@/components/charts/LineChart')
 
 const DashboardPage = () => {
   const [weatherData, setWeatherData] = useState<TransformedWeatherData[]>([]);
-  const [city] = useState('Paris');
+  const [city] = useState('Montreal');
   const [loading, setLoading] = useState(false);
   const [, setError] = useState<string | null>(null);
 
@@ -27,7 +27,7 @@ const DashboardPage = () => {
         if (data && data.forecast && data.forecast.length > 0) {  
           const transformedData = data.forecast.map((entry: ForecastEntry) => ({
             date: new Date(entry.timestamp * 1000).toLocaleString(), 
-            temperature: entry.temp,  
+            temperature: parseFloat(entry.temp.toFixed(1)),  
           }));
   
           console.log("Données transformées : ", transformedData);  // Vérifie que les données sont bien transformées
@@ -51,7 +51,7 @@ const DashboardPage = () => {
 
   return (
     <div className="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div className="shadow-lg rounded-lg bg-white p-4">
+      <div className="shadow-lg rounded-lg bg-white p-4 w-full">
         <h2 className="text-xl font-bold mb-4">Températures au fil du temps</h2>
         {loading ? <p>Chargement des données...</p> : <LineChartComponent data={weatherData} />}
       </div>
